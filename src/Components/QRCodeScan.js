@@ -37,7 +37,7 @@ export default class QRCodeScan extends Component {
       scanHistoryVisible: false,
       StateChange: null,
       isFlashActive: false,
-      reactivate: false,
+      // reactivate: false,
     };
   }
 
@@ -152,11 +152,13 @@ export default class QRCodeScan extends Component {
   DeleteItem = (item, index) => {
     this.RegistryArray.splice(index, 1);
     this.setState({StateChange: index});
+    this.scanner.reactivate();
   };
 
   FlashController = () => {
     if (this.state.isFlashActive) {
       this.setState({flash: RNCamera.Constants.FlashMode.off});
+      this.setState({isFlashActive: false});
       ToastAndroid.show('Flash is disabled!', 1);
     } else {
       this.setState({flash: RNCamera.Constants.FlashMode.torch});
@@ -171,14 +173,18 @@ export default class QRCodeScan extends Component {
   };
 
   onSuccess = e => {
-    if (this.RegistryArray.includes(e.data))
+    if (this.RegistryArray.includes(e.data)){
       console.warn('This barcode/QRCode is already scanned!');
+      this.scanner.reactivate();
+  }
     else {
       this.RegistryArray.push(e.data);
       console.warn(e.data);
       Linking.openURL(e.data).catch(err =>
         console.error('An error occured', err),
       );
+      this.scanner.reactivate();
+
     }
   };
 
@@ -197,23 +203,12 @@ export default class QRCodeScan extends Component {
       setText(null);
     }
   };
-  onRefresh = () =>{
-    this.setState({refresh: true});
-    this.setState({reactivate: true});
-    this.setState({refresh: false});
-    this.setState({reactivate: false});
-  }
+
 
   render() {
     return (
       <QRCodeScanner
-        // RefreshControl={
-        //   <RefreshControl
-        //   refreshing={this.state.refresh}
-        //   onRefresh={this.onRefresh}
-        //   />
-        // }
-        reactivate={this.state.reactivate}
+       ref={(node) => { this.scanner = node }}
         customMarker={
           <TouchableOpacity
             style={{width: 200, height: 200}}></TouchableOpacity>
