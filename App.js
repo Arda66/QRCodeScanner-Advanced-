@@ -27,7 +27,7 @@ const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main Menu">
+      <Stack.Navigator initialRouteName="MainMenuScreen">
         <Stack.Screen
           name="MainMenuScreen"
           component={MainMenuScreen}
@@ -75,9 +75,8 @@ const StackNavigator = () => {
 const MainMenuScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-   const RegistryPopUp = () => {
+  const RegistryPopUp = () => {
     /* CTRL + KC BASINCA YORUMA ALIYOR SATIRI CTRL KU GERİ AÇIYOR */
-
 
     return (
       <Modal
@@ -93,8 +92,6 @@ const MainMenuScreen = ({navigation}) => {
           ToastAndroid.show('Registry has been closed.', ToastAndroid.SHORT);
           setModalVisible(false);
         }}>
-  
-
         <TouchableOpacity
           style={{
             backgroundColor: 'powderblue',
@@ -121,11 +118,12 @@ const MainMenuScreen = ({navigation}) => {
         <Text style={styles.Text2}>for Scanning!</Text>
       </View>
       <RegistryPopUp />
-      <TouchableOpacity
+      {/* <TouchableOpacity
+        
         style={styles.registryButton}
         onPress={() => setModalVisible(true)}>
         <Text style={{fontWeight: 'bold', color: 'black'}}>Registry</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity
         onPress={() => navigation.navigate('QRCodeScanner')}
         style={{justifyContent: 'center', alignItems: 'center', top: '25%'}}>

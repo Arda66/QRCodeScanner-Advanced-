@@ -79,124 +79,96 @@ export default class QRCodeScan extends Component {
             keyboardType="default"
             numberOfLines={1}
           />
-          <View style={{flexDirection: 'row',}}>
-          <TouchableOpacity
-            style={{
-              backgroundColor: 'red',
-              borderRadius: 20,
-              width: 70,
-              height: 40,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            onPress={() => this.ApplyButtonPressed(text, SetText)}>
-            <Text style={{color: 'black', fontWeight: 'bold'}}>Apply</Text>
-          </TouchableOpacity>
+          <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'red',
+                borderRadius: 20,
+                width: 70,
+                height: 40,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => this.ApplyButtonPressed(text, SetText)}>
+              <Text style={{color: 'black', fontWeight: 'bold'}}>Apply</Text>
+            </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
       </Modal>
     );
   };
-  ScanHistory = () =>{
+  ScanHistory = () => {
     return (
-    <Modal
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-      animationType="fade"
-      transparent={false}
-      visible={this.state.scanHistoryVisible}
-      onRequestClose={() => {
-        ToastAndroid.show('Registry has been closed.', ToastAndroid.SHORT);
-        this.setState({scanHistoryVisible:false})
-      }}>
-
-
-
-
-
-
-
-
-      <SafeAreaView style={{ flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'}}>
-      <FlatList
-      data={this.RegistryArray}
-      style={{flex:1}}
-      extraData={this.state.StateChange}
-      renderItem={({item,index}) =>{
-        return(
-
-
-        <View style={{ flex:1}}>
-          <View style={styles.textBox}>
-            <Text style={styles.ListText} numberOfLines={0}>
-            {index+1}-) {item}
-            </Text>
-            <TouchableOpacity style={styles.circleTickBox}
-            onPress={()=>this.DeleteItem(item,index)}>
-              <Text style={{fontWeight: 'bold', color: 'black'}}>X</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-
-        );
-      }}
-      />
-      <TouchableOpacity
+      <Modal
         style={{
-          flex:1,
-          backgroundColor: 'powderblue',
-          borderRadius: 20,
-          width: 100,
-          height: 50,
+          flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
-          position: 'absolute',
-          left: '35%',
-          top: '85%',
         }}
-        onPress={() => this.setState({scanHistoryVisible:false})}>
-        <Text style={{color: 'black', fontWeight: 'bold'}}>Close</Text>
-      </TouchableOpacity>
-    
-      </SafeAreaView>
+        animationType="fade"
+        transparent={false}
+        visible={this.state.scanHistoryVisible}
+        onRequestClose={() => {
+          ToastAndroid.show('Registry has been closed.', ToastAndroid.SHORT);
+          this.setState({scanHistoryVisible: false});
+        }}>
+        <SafeAreaView
+          style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <FlatList
+            data={this.RegistryArray}
+            style={{flex: 1}}
+            extraData={this.state.StateChange}
+            renderItem={({item, index}) => {
+              return (
+                <View style={{flex: 1}}>
+                  <View style={styles.textBox}>
+                    <Text style={styles.ListText} numberOfLines={0}>
+                      {index + 1}-) {item}
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.circleTickBox}
+                      onPress={() => this.DeleteItem(item, index)}>
+                      <Text style={{fontWeight: 'bold', color: 'black'}}>
+                        X
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              );
+            }}
+          />
+          <TouchableOpacity
+            style={{
+              backgroundColor: 'powderblue',
+              borderRadius: 20,
+              width: '25%',
+              height: '10%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              margin: 25,
+            }}
+            onPress={() => this.setState({scanHistoryVisible: false})}>
+            <Text style={{color: 'black', fontWeight: 'bold'}}>Close</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+      </Modal>
+    );
+  };
 
-
-
-
-
-
-
-
-
-
-
-
-
-    </Modal>
-  );}
-
-  DeleteItem = (item,index) =>{
-    this.RegistryArray.splice(index,1);
+  DeleteItem = (item, index) => {
+    this.RegistryArray.splice(index, 1);
     this.setState({StateChange: index});
-  }  ;
+  };
 
   FlashEnabler = () => {
     this.setState({flash: RNCamera.Constants.FlashMode.torch});
     ToastAndroid.show('Flash is Enabled!', 1);
   };
 
-
   EnterManualPressed = () => {
     ToastAndroid.show('Please enter barcode manually', 0, 5);
     this.setState({modalVisible: true});
   };
-
 
   onSuccess = e => {
     if (this.RegistryArray.includes(e.data))
@@ -204,7 +176,7 @@ export default class QRCodeScan extends Component {
     else {
       this.RegistryArray.push(e.data);
       console.warn(e.data);
-        Linking.openURL(e.data).catch(err =>
+      Linking.openURL(e.data).catch(err =>
         console.error('An error occured', err),
       );
     }
@@ -218,7 +190,7 @@ export default class QRCodeScan extends Component {
       this.setState({modalVisible: false});
       this.RegistryArray.push(text);
       console.log(this.RegistryArray);
-        ToastAndroid.show(
+      ToastAndroid.show(
         'Barcode number added registry successfully! (' + text + ')',
         1,
       );
@@ -264,24 +236,22 @@ export default class QRCodeScan extends Component {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-            style={{
-              backgroundColor: 'red',
-              borderRadius: 20,
-              width: 80,
-              height: 50,
-              justifyContent: 'center',
-              alignItems: 'center',
-              position: 'absolute',
-              top: '20%',
-              right: '2%',
-            }}
-            onPress={() =>  this.setState({scanHistoryVisible: true})}>
-            <Text style={{color: 'black', fontWeight: 'bold'}}>Scan History</Text>
-          </TouchableOpacity>
-
-
-
-
+                style={{
+                  backgroundColor: 'red',
+                  borderRadius: 20,
+                  width: 80,
+                  height: 50,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'absolute',
+                  top: '20%',
+                  right: '2%',
+                }}
+                onPress={() => this.setState({scanHistoryVisible: true})}>
+                <Text style={{color: 'black', fontWeight: 'bold'}}>
+                  Scan History
+                </Text>
+              </TouchableOpacity>
             </View>
             <TouchableOpacity
               onPress={() => this.FlashEnabler()}
@@ -291,18 +261,13 @@ export default class QRCodeScan extends Component {
                 source={require('../images/flashDefault.png')}
               />
             </TouchableOpacity>
-            <this.ScanHistory/>
+            <this.ScanHistory />
           </View>
         }
         bottomContent={
           <View
             style={styles.BottomContainer}
-            RefreshControl={
-              <RefreshControl
-                refreshing={this.state.refresh}
-                
-              />
-            }>
+            RefreshControl={<RefreshControl refreshing={this.state.refresh} />}>
             <TouchableOpacity
               style={styles.Button}
               onPress={() => this.props.navigation.navigate('RateUsScreen')}>
@@ -315,14 +280,11 @@ export default class QRCodeScan extends Component {
               }>
               <Text style={styles.Text}>Give us a feedback!</Text>
             </TouchableOpacity>
-
-         
           </View>
         }></QRCodeScanner>
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   centerText: {
@@ -381,9 +343,9 @@ const styles = StyleSheet.create({
     borderColor: 'blue',
     borderRadius: 15,
   },
-  textBox:{
-    flex:1,
-    marginLeft: 15, 
+  textBox: {
+    flex: 1,
+    marginLeft: 15,
     marginTop: 20,
     borderWidth: 2,
     padding: 15,
@@ -393,17 +355,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  ListText:{
+  ListText: {
     color: 'black',
     fontWeight: 'bold',
     paddingRight: 35,
-}, 
-  circleTickBox:{
+  },
+  circleTickBox: {
     minWidth: 25,
     minHeight: 25,
     width: '10%',
     height: '15%',
-    
+
     borderRadius: 10,
     backgroundColor: 'red',
     marginRight: 10,
@@ -412,9 +374,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    left: '95%'
-},
-  
+    left: '95%',
+  },
 });
 
 AppRegistry.registerComponent('default', () => QRCodeScan);

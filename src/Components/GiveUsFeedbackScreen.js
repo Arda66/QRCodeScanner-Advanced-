@@ -19,7 +19,7 @@ const GiveUsFeedbackScreen = ({navigation}) => {
     Alert.alert(
       'Thanks for your feedback!',
       'Now you will return to the Main Menu!',
-      [{text: 'OK', onPress: () => navigation.navigate('Main Menu')}],
+      [{text: 'OK', onPress: () => navigation.navigate('MainMenuScreen')}],
     );
     Keyboard.dismiss();
   };
