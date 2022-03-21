@@ -87,23 +87,9 @@ export default class QRCodeScan extends Component {
               height: 40,
               justifyContent: 'center',
               alignItems: 'center',
-              marginRight: '5%'
             }}
             onPress={() => this.ApplyButtonPressed(text, SetText)}>
             <Text style={{color: 'black', fontWeight: 'bold'}}>Apply</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: 'red',
-              borderRadius: 20,
-              width: 80,
-              height: 45,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginLeft: '5%'
-            }}
-            onPress={() =>  this.setState({scanHistoryVisible: true})}>
-            <Text style={{color: 'black', fontWeight: 'bold'}}>Scan History</Text>
           </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
@@ -240,7 +226,7 @@ export default class QRCodeScan extends Component {
                   alignItems: 'center',
                   position: 'absolute',
                   top: '20%',
-                  right: '25%',
+                  right: '35%',
                 }}
                 onPress={() => this.EnterManualPressed()}>
                 <Text style={{fontWeight: 'bold', color: 'black'}}>Enter</Text>
@@ -248,6 +234,25 @@ export default class QRCodeScan extends Component {
                   manually
                 </Text>
               </TouchableOpacity>
+              <TouchableOpacity
+            style={{
+              backgroundColor: 'red',
+              borderRadius: 20,
+              width: 80,
+              height: 50,
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+              top: '20%',
+              right: '2%',
+            }}
+            onPress={() =>  this.setState({scanHistoryVisible: true})}>
+            <Text style={{color: 'black', fontWeight: 'bold'}}>Scan History</Text>
+          </TouchableOpacity>
+
+
+
+
             </View>
             <TouchableOpacity
               onPress={() => this.FlashEnabler()}
