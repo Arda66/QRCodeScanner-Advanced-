@@ -20,6 +20,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import ThemedListItem from 'react-native-elements/dist/list/ListItem';
 
 /* import {AirbnbRating} from 'react-native-elements';
  */ ('use strict');
@@ -38,6 +39,7 @@ export default class QRCodeScan extends Component {
       flash: RNCamera.Constants.FlashMode.off,
       refresh: false,
       modalVisible: false,
+      scanHistoryVisible: false,
     };
   }
 
@@ -76,7 +78,7 @@ export default class QRCodeScan extends Component {
             keyboardType="default"
             numberOfLines={1}
           />
-
+          <View style={{flexDirection: 'row',}}>
           <TouchableOpacity
             style={{
               backgroundColor: 'red',
@@ -85,57 +87,113 @@ export default class QRCodeScan extends Component {
               height: 40,
               justifyContent: 'center',
               alignItems: 'center',
+              marginRight: '5%'
             }}
             onPress={() => this.ApplyButtonPressed(text, SetText)}>
             <Text style={{color: 'black', fontWeight: 'bold'}}>Apply</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: 'red',
+              borderRadius: 20,
+              width: 80,
+              height: 45,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginLeft: '5%'
+            }}
+            onPress={() =>  this.setState({scanHistoryVisible: true})}>
+            <Text style={{color: 'black', fontWeight: 'bold'}}>Scan History</Text>
+          </TouchableOpacity>
+          </View>
         </KeyboardAvoidingView>
       </Modal>
     );
   };
-
-  RegistryList = () => {
+  ScanHistory = () =>{
     return (
+    <Modal
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      animationType="fade"
+      transparent={false}
+      visible={this.state.scanHistoryVisible}
+      onRequestClose={() => {
+        ToastAndroid.show('Registry has been closed.', ToastAndroid.SHORT);
+        this.setState({scanHistoryVisible:false})
+      }}>
+
+
+
+
       <FlatList
-        data={this.TemporaryArray}
-        renderItem={({arrayitem}) => {
-          this.props.navigation.navigate('MainMenuScreen', {
-            params: {
-              arrayitem: this.TemporaryArray,
-            },
-          });
-          <Text style={{borderWidth: 1, borderColor: 'black'}}>
-            {arrayitem}
-          </Text>;
-        }}></FlatList>
-    );
-  };
+      data={this.TemporaryArray}
+      renderItem={({item}) =>{
+        return(
+          <View style={{justifyContent:'center',flex:1,alignItems:'center', top: '25%', margin:10,}}>
+          <Text style={{borderWidth: 1, color:'black',borderRadius:2, padding: 5,}}>{item}</Text>
+          <TouchableOpacity
+          onPress
+          >
+
+          </TouchableOpacity>
+          </View>
+        );
+      }}
+      />
+
+
+
+
+      <TouchableOpacity
+        style={{
+          backgroundColor: 'powderblue',
+          borderRadius: 20,
+          width: 100,
+          height: 50,
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'absolute',
+          left: '35%',
+          top: '85%',
+        }}
+        onPress={() => this.setState({scanHistoryVisible:false})}>
+        <Text style={{color: 'black', fontWeight: 'bold'}}>Close</Text>
+      </TouchableOpacity>
+    </Modal>
+  );}
+
+
   FlashEnabler = () => {
     this.setState({flash: RNCamera.Constants.FlashMode.torch});
     ToastAndroid.show('Flash is Enabled!', 1);
   };
 
-  /* SendDataToMainMenu = ({navigation}) => {
-    navigation.navigate('MainMenuScreen', {arrayitems: this.TemporaryArray});
-    console.log(this.TemporaryArray);
-  }; */
+
+  EnterManualPressed = () => {
+    ToastAndroid.show('Please enter barcode manually', 0, 5);
+    this.setState({modalVisible: true});
+  };
+  UpdateHistory = (arrayitem) =>{
+
+  }
 
   onSuccess = e => {
     if (this.TemporaryArray.includes(e.data))
       console.warn('This barcode/QRCode is already scanned!');
     else {
       this.TemporaryArray.push(e.data);
+      this.UpdateHistory(e);
       console.warn(e.data);
-      /*       this.SendDataToMainMenu();
-       */ Linking.openURL(e.data).catch(err =>
+        Linking.openURL(e.data).catch(err =>
         console.error('An error occured', err),
       );
     }
   };
-  EnterManualPressed = () => {
-    ToastAndroid.show('Please enter barcode manually', 0, 5);
-    this.setState({modalVisible: true});
-  };
+
   ApplyButtonPressed = (text, setText) => {
     if (text == null) console.warn('Barcode number can not be null!');
     else if (this.TemporaryArray.includes(text))
@@ -144,9 +202,8 @@ export default class QRCodeScan extends Component {
       this.setState({modalVisible: false});
       this.TemporaryArray.push(text);
       console.log(this.TemporaryArray);
-      this.RegistryList();
-      /*       this.SendDataToMainMenu();
-       */ ToastAndroid.show(
+      this.UpdateHistory(text);
+        ToastAndroid.show(
         'Barcode number added registry successfully! (' + text + ')',
         1,
       );
@@ -200,7 +257,7 @@ export default class QRCodeScan extends Component {
                 source={require('../images/flashDefault.png')}
               />
             </TouchableOpacity>
-            {/* <this.RegistryList/> */}
+            <this.ScanHistory/>
           </View>
         }
         bottomContent={
@@ -209,8 +266,7 @@ export default class QRCodeScan extends Component {
             RefreshControl={
               <RefreshControl
                 refreshing={this.state.refresh}
-                /*                 onRefresh={this.setState({refresh: true})}
-                 */
+                
               />
             }>
             <TouchableOpacity
@@ -226,33 +282,13 @@ export default class QRCodeScan extends Component {
               <Text style={styles.Text}>Give us a feedback!</Text>
             </TouchableOpacity>
 
-            {/* <TouchableOpacity style={styles.buttonTouchable}>
-            <AirbnbRating
-              count={5}
-              defaultRating={1}
-              reviews={['Terrible', 'Bad', 'Okay', 'Good', 'Great']}
-              showRating
-            />
-          </TouchableOpacity> */}
+         
           </View>
         }></QRCodeScanner>
     );
   }
 }
-/* const RateuspressHandler = () => {
-  return <RateUsPopUpScreen style={{visible: true}} />;
-};
 
-const RateUsPopUpScreen = () => {
-  return (
-    <Modal visible={false} transparent={true}>
-      <Text styles={{centerText}}>Hello</Text>
-    </Modal>
-  );
-};
-const GiveUsFeedBackScreen = () => {
-  return <Modal visible={false}></Modal>;
-}; */
 
 const styles = StyleSheet.create({
   centerText: {

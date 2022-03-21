@@ -72,22 +72,13 @@ const StackNavigator = () => {
   );
 }; */
 
-const MainMenuScreen = ({navigation, route}) => {
+const MainMenuScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [RegistryArray, setRegistryArray] = [];
-   /* const {arrayitem} = route.params; */
+
    const RegistryPopUp = () => {
     /* CTRL + KC BASINCA YORUMA ALIYOR SATIRI CTRL KU GERİ AÇIYOR */
 
-    // const callbackFunction = (datafromchild) =>{
-    //   setRegistryArray(datafromchild);
-    //   return(
-    //     <QRCodeScan  
-    //         parentCallBack={callbackFunction()}
 
-    //     />
-    //   );
-    // }
     return (
       <Modal
         style={{
@@ -102,13 +93,7 @@ const MainMenuScreen = ({navigation, route}) => {
           ToastAndroid.show('Registry has been closed.', ToastAndroid.SHORT);
           setModalVisible(false);
         }}>
-      {/*   <Text>{route.params.arrayitem}</Text> */}
-
-        {/* <FlatList
-        data
-        renderItem
-        keyExtractor
-        ></FlatList> */}
+  
 
         <TouchableOpacity
           style={{
