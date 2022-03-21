@@ -22,14 +22,9 @@ import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ThemedListItem from 'react-native-elements/dist/list/ListItem';
 
-/* import {AirbnbRating} from 'react-native-elements';
- */ ('use strict');
+('use strict');
 
 export default class QRCodeScan extends Component {
-  //  sendData = () => {
-  //   this.props.parentCallBack(this.TemporaryArray);
-  // };
-
   constructor(props) {
     /* Usestate equivalent in class component */
     super(props);
@@ -42,12 +37,10 @@ export default class QRCodeScan extends Component {
       scanHistoryVisible: false,
       StateChange: null,
       isFlashActive: false,
+      reactivate: false,
     };
   }
 
-  /*  RefreshController = () => {
-    const [Refreshing, SetRefreshing] = useState(false);
-  }; */
   RegistryArray = [];
   EnterManuallyPopUp = () => {
     const [text, SetText] = React.useState(null);
@@ -204,11 +197,23 @@ export default class QRCodeScan extends Component {
       setText(null);
     }
   };
+  onRefresh = () =>{
+    this.setState({refresh: true});
+    this.setState({reactivate: true});
+    this.setState({refresh: false});
+    this.setState({reactivate: false});
+  }
 
   render() {
     return (
       <QRCodeScanner
-        reactivate={false}
+        // RefreshControl={
+        //   <RefreshControl
+        //   refreshing={this.state.refresh}
+        //   onRefresh={this.onRefresh}
+        //   />
+        // }
+        reactivate={this.state.reactivate}
         customMarker={
           <TouchableOpacity
             style={{width: 200, height: 200}}></TouchableOpacity>
@@ -272,9 +277,7 @@ export default class QRCodeScan extends Component {
           </View>
         }
         bottomContent={
-          <View
-            style={styles.BottomContainer}
-            RefreshControl={<RefreshControl refreshing={this.state.refresh} />}>
+          <View style={styles.BottomContainer}>
             <TouchableOpacity
               style={styles.Button}
               onPress={() => this.props.navigation.navigate('RateUsScreen')}>
