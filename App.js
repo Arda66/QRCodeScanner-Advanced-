@@ -12,12 +12,13 @@ import {
   FlatList,
   Modal,
   Pressable,
+  Alert,
+  ToastAndroid,
 } from 'react-native';
 
 import QRCodeScan from './src/Components/QRCodeScan';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createStackNavigator, createAppContainer} from 'react-navigation';
 import RateUsScreen from './src/Components/RateUsScreen';
 import GiveUsFeedbackScreen from './src/Components/GiveUsFeedbackScreen';
 
@@ -28,8 +29,8 @@ const StackNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main Menu">
         <Stack.Screen
-          name="Main Menu"
-          component={QRcodeButton}
+          name="MainMenuScreen"
+          component={MainMenuScreen}
           options={{title: 'Main Menu'}}
         />
         <Stack.Screen
@@ -71,40 +72,64 @@ const StackNavigator = () => {
   );
 }; */
 
-const QRcodeButton = ({navigation}) => {
-  const RegistryPopUp = () => {
-    const [modalVisible, setModalVisible] = useState(false);
+const MainMenuScreen = ({navigation, route}) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [RegistryArray, setRegistryArray] = [];
+   /* const {arrayitem} = route.params; */
+   const RegistryPopUp = () => {
+    /* CTRL + KC BASINCA YORUMA ALIYOR SATIRI CTRL KU GERİ AÇIYOR */
 
+    // const callbackFunction = (datafromchild) =>{
+    //   setRegistryArray(datafromchild);
+    //   return(
+    //     <QRCodeScan  
+    //         parentCallBack={callbackFunction()}
+
+    //     />
+    //   );
+    // }
     return (
       <Modal
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
         animationType="fade"
-        transparent={true}
+        transparent={false}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
+          ToastAndroid.show('Registry has been closed.', ToastAndroid.SHORT);
+          setModalVisible(false);
         }}>
-        <Pressable
+      {/*   <Text>{route.params.arrayitem}</Text> */}
+
+        {/* <FlatList
+        data
+        renderItem
+        keyExtractor
+        ></FlatList> */}
+
+        <TouchableOpacity
           style={{
-            backgroundColor: 'red',
+            backgroundColor: 'powderblue',
             borderRadius: 20,
-            width: 50,
+            width: 100,
             height: 50,
             justifyContent: 'center',
             alignItems: 'center',
+            position: 'absolute',
+            left: '35%',
+            top: '85%',
           }}
-          onPress={() => setModalVisible(true)}>
-          <Text>Modelin içindeyiz</Text>
-        </Pressable>
+          onPress={() => setModalVisible(false)}>
+          <Text style={{color: 'black', fontWeight: 'bold'}}>Close</Text>
+        </TouchableOpacity>
       </Modal>
     );
   };
-
   return (
     <View style={styles.Container}>
-      {/* <TouchableOpacity>
-        <FlatList> </FlatList>
-      </TouchableOpacity> */}
       <View style={styles.TextContainer}>
         <Text style={styles.Text1}>Welcome to the QRCodeScanner!</Text>
         <Text style={styles.Text2}>Press the button below </Text>
@@ -113,7 +138,7 @@ const QRcodeButton = ({navigation}) => {
       <RegistryPopUp />
       <TouchableOpacity
         style={styles.registryButton}
-        onPress={() => RegistryPopUp}>
+        onPress={() => setModalVisible(true)}>
         <Text style={{fontWeight: 'bold', color: 'black'}}>Registry</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -121,7 +146,8 @@ const QRcodeButton = ({navigation}) => {
         style={{justifyContent: 'center', alignItems: 'center', top: '25%'}}>
         <Image
           style={styles.button}
-          source={require('./src/images/icon.jpg')}></Image>
+          source={require('./src/images/icon.jpg')}
+        />
         <Text style={{marginTop: 5, color: 'black', fontWeight: 'bold'}}>
           QRcodeScanner
         </Text>
@@ -170,6 +196,4 @@ const styles = StyleSheet.create({
   },
 });
 
-/* export default StackNavigator;
- */
 export default StackNavigator;
