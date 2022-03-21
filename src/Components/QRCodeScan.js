@@ -32,12 +32,10 @@ export default class QRCodeScan extends Component {
       navigation:
         '' /* We set prop value default so we can use to navigate in onpress  function later  */,
       flash: RNCamera.Constants.FlashMode.off,
-      refresh: false,
       modalVisible: false,
       scanHistoryVisible: false,
       StateChange: null,
       isFlashActive: false,
-      // reactivate: false,
     };
   }
 
