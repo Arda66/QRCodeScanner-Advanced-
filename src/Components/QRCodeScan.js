@@ -40,13 +40,14 @@ export default class QRCodeScan extends Component {
       refresh: false,
       modalVisible: false,
       scanHistoryVisible: false,
+      StateChange: null,
     };
   }
 
   /*  RefreshController = () => {
     const [Refreshing, SetRefreshing] = useState(false);
   }; */
-  TemporaryArray = [];
+  RegistryArray = [];
   EnterManuallyPopUp = () => {
     const [text, SetText] = React.useState(null);
 
@@ -115,27 +116,40 @@ export default class QRCodeScan extends Component {
 
 
 
-      <FlatList
-      data={this.TemporaryArray}
-      renderItem={({item}) =>{
-        return(
-          <View style={{justifyContent:'center',flex:1,alignItems:'center', top: '25%', margin:10,}}>
-          <Text style={{borderWidth: 1, color:'black',borderRadius:2, padding: 5,}}>{item}</Text>
-          <TouchableOpacity
-          onPress
-          >
 
-          </TouchableOpacity>
+
+
+
+      <SafeAreaView style={{ flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'}}>
+      <FlatList
+      data={this.RegistryArray}
+      style={{flex:1}}
+      extraData={this.state.StateChange}
+      renderItem={({item,index}) =>{
+        return(
+
+
+        <View style={{ flex:1}}>
+          <View style={styles.textBox}>
+            <Text style={styles.ListText} numberOfLines={0}>
+            {index+1}-) {item}
+            </Text>
+            <TouchableOpacity style={styles.circleTickBox}
+            onPress={()=>this.DeleteItem(item,index)}>
+              <Text style={{fontWeight: 'bold', color: 'black'}}>X</Text>
+            </TouchableOpacity>
           </View>
+        </View>
+
+
         );
       }}
       />
-
-
-
-
       <TouchableOpacity
         style={{
+          flex:1,
           backgroundColor: 'powderblue',
           borderRadius: 20,
           width: 100,
@@ -149,9 +163,28 @@ export default class QRCodeScan extends Component {
         onPress={() => this.setState({scanHistoryVisible:false})}>
         <Text style={{color: 'black', fontWeight: 'bold'}}>Close</Text>
       </TouchableOpacity>
+    
+      </SafeAreaView>
+
+
+
+
+
+
+
+
+
+
+
+
+
     </Modal>
   );}
 
+  DeleteItem = (item,index) =>{
+    this.RegistryArray.splice(index,1);
+    this.setState({StateChange: index});
+  }  ;
 
   FlashEnabler = () => {
     this.setState({flash: RNCamera.Constants.FlashMode.torch});
@@ -163,16 +196,13 @@ export default class QRCodeScan extends Component {
     ToastAndroid.show('Please enter barcode manually', 0, 5);
     this.setState({modalVisible: true});
   };
-  UpdateHistory = (arrayitem) =>{
 
-  }
 
   onSuccess = e => {
-    if (this.TemporaryArray.includes(e.data))
+    if (this.RegistryArray.includes(e.data))
       console.warn('This barcode/QRCode is already scanned!');
     else {
-      this.TemporaryArray.push(e.data);
-      this.UpdateHistory(e);
+      this.RegistryArray.push(e.data);
       console.warn(e.data);
         Linking.openURL(e.data).catch(err =>
         console.error('An error occured', err),
@@ -182,13 +212,12 @@ export default class QRCodeScan extends Component {
 
   ApplyButtonPressed = (text, setText) => {
     if (text == null) console.warn('Barcode number can not be null!');
-    else if (this.TemporaryArray.includes(text))
+    else if (this.RegistryArray.includes(text))
       console.warn('This barcode is already scanned and added!');
     else {
       this.setState({modalVisible: false});
-      this.TemporaryArray.push(text);
-      console.log(this.TemporaryArray);
-      this.UpdateHistory(text);
+      this.RegistryArray.push(text);
+      console.log(this.RegistryArray);
         ToastAndroid.show(
         'Barcode number added registry successfully! (' + text + ')',
         1,
@@ -352,6 +381,40 @@ const styles = StyleSheet.create({
     borderColor: 'blue',
     borderRadius: 15,
   },
+  textBox:{
+    flex:1,
+    marginLeft: 15, 
+    marginTop: 20,
+    borderWidth: 2,
+    padding: 15,
+    marginRight: 15,
+    borderRadius: 20,
+    borderColor: 'blue',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  ListText:{
+    color: 'black',
+    fontWeight: 'bold',
+    paddingRight: 35,
+}, 
+  circleTickBox:{
+    minWidth: 25,
+    minHeight: 25,
+    width: '10%',
+    height: '15%',
+    
+    borderRadius: 10,
+    backgroundColor: 'red',
+    marginRight: 10,
+    opacity: 0.9,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    left: '95%'
+},
+  
 });
 
 AppRegistry.registerComponent('default', () => QRCodeScan);
