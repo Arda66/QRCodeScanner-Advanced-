@@ -41,6 +41,7 @@ export default class QRCodeScan extends Component {
       modalVisible: false,
       scanHistoryVisible: false,
       StateChange: null,
+      isFlashActive: false,
     };
   }
 
@@ -160,9 +161,15 @@ export default class QRCodeScan extends Component {
     this.setState({StateChange: index});
   };
 
-  FlashEnabler = () => {
-    this.setState({flash: RNCamera.Constants.FlashMode.torch});
-    ToastAndroid.show('Flash is Enabled!', 1);
+  FlashController = () => {
+    if (this.state.isFlashActive) {
+      this.setState({flash: RNCamera.Constants.FlashMode.off});
+      ToastAndroid.show('Flash is disabled!', 1);
+    } else {
+      this.setState({flash: RNCamera.Constants.FlashMode.torch});
+      ToastAndroid.show('Flash is Enabled!', 1);
+      this.setState({isFlashActive: true});
+    }
   };
 
   EnterManualPressed = () => {
@@ -245,7 +252,7 @@ export default class QRCodeScan extends Component {
                   alignItems: 'center',
                   position: 'absolute',
                   top: '20%',
-                  right: '2%',
+                  right: '5%',
                 }}
                 onPress={() => this.setState({scanHistoryVisible: true})}>
                 <Text style={{color: 'black', fontWeight: 'bold'}}>
@@ -254,11 +261,11 @@ export default class QRCodeScan extends Component {
               </TouchableOpacity>
             </View>
             <TouchableOpacity
-              onPress={() => this.FlashEnabler()}
+              onPress={() => this.FlashController()}
               style={{justifyContent: 'center', alignItems: 'center'}}>
               <Image
-                style={{width: 70, height: 70, bottom: '20%'}}
-                source={require('../images/flashDefault.png')}
+                style={{width: 60, height: 60, bottom: '20%'}}
+                source={require('../images/flashicon.png')}
               />
             </TouchableOpacity>
             <this.ScanHistory />
@@ -293,7 +300,7 @@ const styles = StyleSheet.create({
     color: '#777',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '2%',
+    marginTop: '1%',
   },
   textBold: {
     flex: 1,
